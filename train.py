@@ -4,10 +4,12 @@ model = YOLO("yolo11n.pt")
 
 model.train(
     data="data.yaml",
-    epochs=100,
+    epochs=50,
     imgsz=640,
     batch=8,
-    device="cpu"
+    device="cpu",
+    project="runs",
+    name="train"
 )
 
 print("Training Finished")
