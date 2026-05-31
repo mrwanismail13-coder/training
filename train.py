@@ -1,9 +1,15 @@
-train: train/images
-val: valid/images
-test: test/images
+from ultralytics import YOLO
 
-nc: 2
+model = YOLO("yolo11n.pt")
 
-names:
-  0: object_ball
-  1: white_cue_ball
+model.train(
+    data="data.yaml",
+    epochs=50,
+    imgsz=640,
+    batch=8,
+    device="cpu",
+    project="runs",
+    name="train"
+)
+
+print("Training Finished")
