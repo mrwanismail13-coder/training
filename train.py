@@ -1,15 +1,13 @@
-from ultralytics import YOLO
+train: ../train/images
+val: ../valid/images
+test: ../test/images
 
-model = YOLO("yolo11n.pt")
+nc: 2
+names: ['object_ball', 'white_cue_ball']
 
-model.train(
-    data="data.yaml",
-    epochs=50,
-    imgsz=640,
-    batch=8,
-    device="cpu",
-    project="runs",
-    name="train"
-)
-
-print("Training Finished")
+roboflow:
+  workspace: ismails-workspace-2eanf
+  project: billiards-ball-tracking
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/ismails-workspace-2eanf/billiards-ball-tracking/dataset/1
