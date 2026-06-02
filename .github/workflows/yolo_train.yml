@@ -31,11 +31,11 @@ jobs:
           yaml_path = 'dataset/data.yaml'
           
           if os.path.exists(yaml_path):
-              print('Found data.yaml! Starting actual training...')
-              # أجبرنا الموديل هنا يحفظ المخرجات في مجلد ثابت اسمه my_train جوه runs/detect
+              print('Found data.yaml! Starting 1-Epoch Test...')
+              # تشغيل لفة واحدة فقط للتأكد من مسار حفظ الملفات والرفع
               model.train(
                   data=yaml_path, 
-                  epochs=150, 
+                  epochs=1, 
                   imgsz=640, 
                   device='cpu', 
                   cache=True,
@@ -46,7 +46,7 @@ jobs:
               raise FileNotFoundError(f'Critical Error: {yaml_path} does not exist!')
           "
 
-      # تعديل خطوة الرفع لجلب المجلد بالكامل لضمان الحصول على الملف فوراً
+      # خطوة الرفع المؤمنة والمباشرة من المجلد الثابت
       - name: Upload Trained Weights
         if: always()
         uses: actions/upload-artifact@v4
