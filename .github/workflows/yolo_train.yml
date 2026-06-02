@@ -1,51 +1,55 @@
 name: Train YOLOv11 from Local Dataset
 
 on:
-  workflow_dispatch: # زرار التشغيل اليدوي من موقع GitHub
+  workflow_dispatch:
 
 jobs:
   train:
     runs-on: ubuntu-latest
     
     steps:
-      # 1. سحب الملفات والصور اللي أنت رفعتها في الريبو
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. تهيئة بيئة بايثون جوه السيرفر
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      # 3. تثبيت مكتبة YOLOv11 الرسمية فقط
       - name: Install Ultralytics
         run: |
           python -m pip install --upgrade pip
           pip install ultralytics
 
-      # 4. تشغيل التدريب لـ 150 لفة على الداتا المرفوعة
       - name: Run YOLOv11 Training
         run: |
           python -c "
           from ultralytics import YOLO
           import os
           
-          # استدعاء الموديل الخام للتدريب عليه
           model = YOLO('yolo11n.pt')
-          
           yaml_path = 'dataset/data.yaml'
+          
           if os.path.exists(yaml_path):
-              # تشغيل التدريب ومراعاة الكاش لتسريع المعالجة
-              model.train(data=yaml_path, epochs=150, imgsz=640, device='cpu', cache=True)
+              print('Found data.yaml! Starting actual training...')
+              # أجبرنا الموديل هنا يحفظ المخرجات في مجلد ثابت اسمه my_train جوه runs/detect
+              model.train(
+                  data=yaml_path, 
+                  epochs=150, 
+                  imgsz=640, 
+                  device='cpu', 
+                  cache=True,
+                  project='runs/detect',
+                  name='my_train'
+              )
           else:
-              print('Error: dataset/data.yaml not found inside repository!')
+              raise FileNotFoundError(f'Critical Error: {yaml_path} does not exist!')
           "
 
-      # 5. استخراج ملف الـ best.pt النهائي عشان تحمله بجهازك
+      # تعديل خطوة الرفع لجلب المجلد بالكامل لضمان الحصول على الملف فوراً
       - name: Upload Trained Weights
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: yolov11-8ballpool-local-weights
-          path: runs/detect/train/weights/best.pt
+          path: runs/detect/my_train/weights/best.pt
