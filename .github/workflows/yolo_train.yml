@@ -31,11 +31,11 @@ jobs:
           yaml_path = 'dataset/data.yaml'
           
           if os.path.exists(yaml_path):
-              print('Found data.yaml! Starting 1-Epoch Test...')
-              # تشغيل لفة واحدة فقط للتأكد من مسار حفظ الملفات والرفع
+              print('Found data.yaml! Starting 2-Epochs Safe Test...')
+              # تشغيل لفتين لإجبار الموديل على إنشاء ملف best.pt
               model.train(
                   data=yaml_path, 
-                  epochs=1, 
+                  epochs=2, 
                   imgsz=640, 
                   device='cpu', 
                   cache=True,
@@ -46,10 +46,10 @@ jobs:
               raise FileNotFoundError(f'Critical Error: {yaml_path} does not exist!')
           "
 
-      # خطوة الرفع المؤمنة والمباشرة من المجلد الثابت
+      # رفع مجلد الأوزان بالكامل لضمان جلب الملفات أياً كانت التسمية
       - name: Upload Trained Weights
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: yolov11-8ballpool-local-weights
-          path: runs/detect/my_train/weights/best.pt
+          path: runs/detect/my_train/weights/
