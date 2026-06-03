@@ -8,7 +8,7 @@ model = YOLO("yolo11n.pt")
 
 results = model.train(
     data=str(ROOT / "dataset" / "data.yaml"),
-    epochs=5,
+    epochs=50,
     imgsz=640,
     batch=16,
     project=str(ROOT / "runs"),
