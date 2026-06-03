@@ -25,14 +25,18 @@ jobs:
         run: |
           python train.py
 
-      - name: Upload best.pt
-        uses: actions/upload-artifact@v4
-        with:
-          name: best-model
-          path: runs/train/weights/best.pt
+      - name: Show Generated Files
+        run: |
+          echo "=== Current Directory ==="
+          pwd
+          echo "=== Files Under runs ==="
+          find runs -type f || true
 
-      - name: Upload last.pt
+      - name: Upload Weights
         uses: actions/upload-artifact@v4
         with:
-          name: last-model
-          path: runs/train/weights/last.pt
+          name: trained-model
+          path: |
+            runs/**/best.pt
+            runs/**/last.pt
+          if-no-files-found: warn
