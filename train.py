@@ -11,3 +11,5 @@ model.train(
     name="pool_detector",
     exist_ok=True
 )
+
+print("Training Finished")
