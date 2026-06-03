@@ -1,4 +1,4 @@
-name: Train YOLO Model
+name: Train YOLO
 
 on:
   workflow_dispatch:
@@ -21,30 +21,38 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Verify Dataset
-        run: |
-          echo "Checking dataset structure..."
-          ls -R dataset
-
-      - name: Train YOLO
+      - name: Train Model
         run: |
           python train.py
 
-      - name: Find Model Files
+      - name: Show PT Files
         run: |
-          echo "Searching for .pt files..."
-          find . -type f -name "*.pt"
+          echo "Searching..."
+          find . -name "*.pt"
 
-      - name: Upload best.pt
+      - name: Collect Models
+        run: |
+          mkdir -p artifacts
+
+          BEST=$(find . -name "best.pt" | head -n 1)
+          LAST=$(find . -name "last.pt" | head -n 1)
+
+          echo "BEST=$BEST"
+          echo "LAST=$LAST"
+
+          cp "$BEST" artifacts/best.pt
+          cp "$LAST" artifacts/last.pt
+
+          ls -la artifacts
+
+      - name: Upload Best Model
         uses: actions/upload-artifact@v4
         with:
           name: best-model
-          path: runs/pool_detector/weights/best.pt
-          if-no-files-found: warn
+          path: artifacts/best.pt
 
-      - name: Upload last.pt
+      - name: Upload Last Model
         uses: actions/upload-artifact@v4
         with:
           name: last-model
-          path: runs/pool_detector/weights/last.pt
-          if-no-files-found: warn
+          path: artifacts/last.pt
