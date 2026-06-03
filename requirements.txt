@@ -1,6 +1,5 @@
 ultralytics
 torch
 torchvision
-numpy
-opencv-python
 pyyaml
+opencv-python-headless
