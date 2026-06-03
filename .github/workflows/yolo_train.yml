@@ -5,16 +5,16 @@ on:
 
 jobs:
   train:
-
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.11"
 
       - name: Install Dependencies
         run: |
@@ -25,8 +25,14 @@ jobs:
         run: |
           python train.py
 
-      - name: Upload Model
+      - name: Upload best.pt
         uses: actions/upload-artifact@v4
         with:
           name: best-model
           path: runs/train/weights/best.pt
+
+      - name: Upload last.pt
+        uses: actions/upload-artifact@v4
+        with:
+          name: last-model
+          path: runs/train/weights/last.pt
