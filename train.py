@@ -1,32 +1,17 @@
-name: Train YOLO
+from ultralytics import YOLO
 
-on:
-  workflow_dispatch:
+def main():
+    model = YOLO("yolo11n.pt")  # أو yolo11s.pt
 
-jobs:
-  train:
+    model.train(
+        data="dataset/data.yaml",
+        epochs=100,
+        imgsz=640,
+        batch=16,
+        device="cpu",
+        project="runs",
+        name="train"
+    )
 
-    runs-on: windows-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Train Model
-        run: |
-          python train.py
-
-      - name: Upload Model
-        uses: actions/upload-artifact@v4
-        with:
-          name: best-model
-          path: runs/train/weights/best.pt
+if __name__ == "__main__":
+    main()
