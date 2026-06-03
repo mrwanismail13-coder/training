@@ -1,17 +1,14 @@
 from ultralytics import YOLO
 
-def main():
-    model = YOLO("yolo11n.pt")  # أو yolo11s.pt
+model = YOLO("yolo11n.pt")
 
-    model.train(
-        data="dataset/data.yaml",
-        epochs=100,
-        imgsz=640,
-        batch=16,
-        device="cpu",
-        project="runs",
-        name="train"
-    )
-
-if __name__ == "__main__":
-    main()
+model.train(
+    data="dataset/data.yaml",
+    epochs=10,
+    imgsz=640,
+    batch=16,
+    workers=2,
+    cache=True,
+    project="runs",
+    name="pool_detector"
+)
